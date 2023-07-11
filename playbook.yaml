@@ -1,0 +1,49 @@
+---
+  - hosts: localhost
+    connection: local
+    tasks:
+    # - name: Update package cache
+    #   apt:
+    #     update_cache: yes
+
+    - name: Install Docker-ce
+      apt:
+        name: docker-ce 
+        state: present
+
+    - name: Install Docker-ce-cli
+      apt:
+        name: docker-ce-cli 
+        state: present
+
+    - name: Install containerd.io
+      apt:
+        name: containerd.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+    
+    # - name: Copy files to the Docker build context
+    #   copy:
+    #     src: ./
+    #     dest: ./ansible_files
+    
+    - name: Build image and with build args
+      docker_image:
+        name: printer
+        build:
+          path: ./ansible_files
+          args:
+            listen_port: 5000
+        source: build
+
+    - name: Run Docker container
+      docker_container:
+        name: printer
+        image: printer
+        state: started
+        ports:
+          - "5000:5000"

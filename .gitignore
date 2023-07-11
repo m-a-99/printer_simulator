@@ -1,0 +1,5 @@
+.pytest_cash/
+dum/
+jenkins_docker_file/
+ansible_files/
+.prettierrc
